@@ -1,0 +1,336 @@
+let
+    Source = Excel.Workbook(File.Contents("I:\Present\BD_PRODUCTION PLANNING & CONTROL\00_INFORMATION CENTER_PLANNING\00_PLANNING PRESENTATION\2025\Q1-Q2\Planning EXD\Plan crushing EXD 2025.xlsx"), null, true),
+    DATA_Overview_Sheet = Source{[Item="DATA_Overview",Kind="Sheet"]}[Data],
+    #"Changed Type" = Table.TransformColumnTypes(DATA_Overview_Sheet,{{"Column1", type any}, {"Column2", type any}, {"Column3", type text}, {"Column4", type any}, {"Column5", type any}, {"Column6", type any}, {"Column7", type any}, {"Column8", type any}, {"Column9", type any}, {"Column10", type any}, {"Column11", type any}, {"Column12", type any}, {"Column13", type any}, {"Column14", type any}, {"Column15", type any}, {"Column16", type any}, {"Column17", type any}, {"Column18", type any}, {"Column19", type any}, {"Column20", type any}, {"Column21", type any}, {"Column22", type any}, {"Column23", type any}, {"Column24", type any}, {"Column25", type any}, {"Column26", type any}, {"Column27", type any}, {"Column28", type any}, {"Column29", type any}, {"Column30", type any}, {"Column31", type any}, {"Column32", type text}, {"Column33", type text}, {"Column34", type text}, {"Column35", type text}, {"Column36", type text}, {"Column37", type any}, {"Column38", type any}, {"Column39", type any}, {"Column40", type any}, {"Column41", type any}, {"Column42", type any}, {"Column43", type any}}),
+    #"Removed Top Rows" = Table.Skip(#"Changed Type",1),
+    #"Removed Top Rows1" = Table.Skip(#"Removed Top Rows",1),
+    #"Promoted Headers" = Table.PromoteHeaders(#"Removed Top Rows1", [PromoteAllScalars=true]),
+    #"Renamed Columns" = Table.RenameColumns(#"Promoted Headers",{{"NM BRA", "Crushing_NM"}, {"DH BRA", "Crushing_DH"}, {"Non-GMOs", "Crushing_NonGMOs"}}),
+    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each ([Date] <> null and [Date] <> "Apr" and [Date] <> "Aug" and [Date] <> "Buying" and [Date] <> "C/F" and [Date] <> "Crushing " and [Date] <> "Date" and [Date] <> "Dec" and [Date] <> "Feb" and [Date] <> "Jan" and [Date] <> "Jul" and [Date] <> "Jun" and [Date] <> "Mar" and [Date] <> "May" and [Date] <> "Month" and [Date] <> "Nov" and [Date] <> "Oct" and [Date] <> "Sep" and [Date] <> "Summary 2025" and [Date] <> "Total" and [Date] <> "TOTAL:")),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Filtered Rows",{{"Date", type date}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Changed Type1",{"SN"}),
+    #"Renamed Columns1" = Table.RenameColumns(#"Removed Columns",{{"NM BRA_1", "Prod_NM"}, {"DH BRA_2", "Prod_DH"}, {"SB Hull", "Prod_Hull"}, {"Non-GMOs_3", "Prod_NonGMOs"}}),
+    #"Removed Columns1" = Table.RemoveColumns(#"Renamed Columns1",{"SN_4"}),
+    #"Renamed Columns2" = Table.RenameColumns(#"Removed Columns1",{{"NM BRA Delivery", "Deliv_NM"}, {"DH BRA   Delivery", "Deliv_DH"}, {"SB Hull_5", "Deliv_Hull"}, {"Non-GMOs_6", "Deliv_NonGMOs"}}),
+    #"Removed Columns2" = Table.RemoveColumns(#"Renamed Columns2",{"SN_7"}),
+    #"Renamed Columns3" = Table.RenameColumns(#"Removed Columns2",{{"NM BRA Stock", "Stock_NM"}, {"DH BRA Stock", "Stock_DH"}, {"SB Hull_8", "Stock_Hull"}, {"Non-GMOs_9", "Stock_NonGMOs"}}),
+    #"Removed Columns3" = Table.RemoveColumns(#"Renamed Columns3",{"SN_10"}),
+    #"Renamed Columns4" = Table.RenameColumns(#"Removed Columns3",{{"Cap. WH", "Cap_WH"}, {"WH Space", "WH_Space"}}),
+    #"Removed Columns4" = Table.RemoveColumns(#"Renamed Columns4",{"NM BRA UN.", "DH BRA UN.", "L/S NM BRA", "L/S DH BRA", "Crushing ", "Stock_11", "delivery", "Space", "Space avail", "Column37", "Column38", "Column39", "Column40", "Column41", "Column42", "Column43"}),
+    #"Renamed Columns5" = Table.RenameColumns(#"Removed Columns4",{{"Column1", "A"}}),
+    #"Changed Type2" = Table.TransformColumnTypes(#"Renamed Columns5",{{"A", type text}, {"Receiving", Int64.Type}, {"Stock", Int64.Type}, {"Crushing_NM", Int64.Type}, {"Crushing_DH", Int64.Type}, {"Crushing_NonGMOs", Int64.Type}, {"Prod_NM", Int64.Type}, {"Prod_DH", Int64.Type}, {"Prod_Hull", Int64.Type}, {"Prod_NonGMOs", Int64.Type}, {"Deliv_NM", Int64.Type}, {"Deliv_DH", Int64.Type}, {"Deliv_Hull", Int64.Type}, {"Deliv_NonGMOs", Int64.Type}, {"Stock_NM", Int64.Type}, {"Stock_DH", Int64.Type}, {"Stock_Hull", Int64.Type}, {"Stock_NonGMOs", Int64.Type}, {"Cap_WH", Int64.Type}, {"Total ", Int64.Type}, {"WH_Space", Int64.Type}}),
+    #"FilteredOut2023" = Table.SelectRows(#"Changed Type2", each Date.Year([Date]) <> 2023),
+
+    #"Replaced Value3" = Table.ReplaceValue(#"FilteredOut2023","Lot 7/67,8/67","Lot 8/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","Lot 89/67","Lot 9/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","Lot 11,1/67","Lot 11/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","Lot 15,14/67","Lot 14/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6","Lot 17,16/67","Lot 16/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value7","Lot 18,19/67","Lot 19/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value9" = Table.ReplaceValue(#"Replaced Value8","Lot24,23/67","Lot 24/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value10" = Table.ReplaceValue(#"Replaced Value9","Lot24/67","Lot 24/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value11" = Table.ReplaceValue(#"Replaced Value10","Lot 24,23/67","Lot 23/67",Replacer.ReplaceText,{"Lot No."}),
+
+    #"Replaced Value16" = Table.ReplaceValue(#"Replaced Value11","Lot11/68","Lot 11/68",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value17" = Table.ReplaceValue(#"Replaced Value16","Lot8/68","Lot 8/68",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value18" = Table.ReplaceValue(#"Replaced Value17","Lot12/68","Lot 12/68",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value19" = Table.ReplaceValue(#"Replaced Value18","Lot14/68","Lot 14/68 ",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value20" = Table.ReplaceValue(#"Replaced Value19","Lot13/68","Lot 13/68",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value21" = Table.ReplaceValue(#"Replaced Value20","Lot15/68","Lot 15/68",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value" = Table.ReplaceValue(#"Replaced Value21","Lot 8-9/67","Lot 9/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Lot 11,10/67","Lot 10/67",Replacer.ReplaceText,{"Lot No."}),
+    #"Renamed Columns6" = Table.RenameColumns(#"Replaced Value1",{{"Lot No.", "Lot_No"}}),
+    #"Added Custom" = Table.AddColumn(#"Renamed Columns6", "Lot No.", each if [Lot_No] = "Lot8,9/68" and [Date] >= #date(2025, 6, 8) and [Date] <= #date(2025, 6, 10) then "Lot 8/68"
+else if [Lot_No] = "Lot8,9/68" and [Date] >= #date(2025, 6, 11) and [Date] <= #date(2025, 6, 16) then "Lot 9/68"
+else if [Lot_No] = "Lot 9,11/68" and [Date] >= #date(2025, 6, 17) and [Date] <= #date(2025, 6, 20) then "Lot 9/68"
+else if [Lot_No] = "Lot 9,11/68"  and [Date] >= #date(2025, 6, 21) and [Date] <= #date(2025, 6, 22) then "Lot 11/68"
+else [Lot_No]),
+    #"Changed Type3" = Table.TransformColumnTypes(#"Added Custom",{{"Lot No.", type text}}),
+
+    #"Fixed Lot No." = Table.TransformColumns(#"Changed Type3", {
+    {"Lot No.", each 
+        if _ <> null then
+            let
+                CleanLot = Text.Upper(Text.Trim(Text.Clean(_)))
+            in
+                if Text.StartsWith(CleanLot, "LOT ") and Text.Contains(CleanLot, "/") then CleanLot
+                else null
+        else null
+    , type text}
+}),
+    #"Reordered Columns" = Table.ReorderColumns(#"Fixed Lot No.",{"A", "Date", "Lot No.", "Receiving", "Stock", "Crushing_NM", "Crushing_DH", "Crushing_NonGMOs", "Prod_NM", "Prod_DH", "Prod_Hull", "Prod_NonGMOs", "Deliv_NM", "Deliv_DH", "Deliv_Hull", "Deliv_NonGMOs", "Stock_NM", "Stock_DH", "Stock_Hull", "Stock_NonGMOs", "Cap_WH", "Total ", "WH_Space", "Lot_No"}),
+    #"Replaced Value2" = Table.ReplaceValue(#"Reordered Columns",null,0,Replacer.ReplaceValue,{"Receiving"}),
+    #"Replaced Value12" = Table.ReplaceValue(#"Replaced Value2",null,0,Replacer.ReplaceValue,{"Stock"}),
+    #"Replaced Value13" = Table.ReplaceValue(#"Replaced Value12",null,0,Replacer.ReplaceValue,{"Crushing_NM"}),
+    #"Replaced Value14" = Table.ReplaceValue(#"Replaced Value13",null,0,Replacer.ReplaceValue,{"Crushing_DH"}),
+    #"Replaced Value15" = Table.ReplaceValue(#"Replaced Value14",null,0,Replacer.ReplaceValue,{"Crushing_NonGMOs"}),
+    #"Replaced Value22" = Table.ReplaceValue(#"Replaced Value15",null,0,Replacer.ReplaceValue,{"Prod_NM"}),
+    #"Replaced Value23" = Table.ReplaceValue(#"Replaced Value22",null,0,Replacer.ReplaceValue,{"Prod_DH"}),
+    #"Replaced Value24" = Table.ReplaceValue(#"Replaced Value23",null,0,Replacer.ReplaceValue,{"Prod_Hull"}),
+    #"Replaced Value25" = Table.ReplaceValue(#"Replaced Value24",null,0,Replacer.ReplaceValue,{"Prod_NonGMOs"}),
+    #"Replaced Value26" = Table.ReplaceValue(#"Replaced Value25",null,0,Replacer.ReplaceValue,{"Deliv_NM"}),
+    #"Replaced Value27" = Table.ReplaceValue(#"Replaced Value26",null,0,Replacer.ReplaceValue,{"Deliv_DH"}),
+    #"Replaced Value28" = Table.ReplaceValue(#"Replaced Value27",null,0,Replacer.ReplaceValue,{"Deliv_Hull"}),
+    #"Replaced Value29" = Table.ReplaceValue(#"Replaced Value28",null,0,Replacer.ReplaceValue,{"Deliv_NonGMOs"}),
+    #"Replaced Value30" = Table.ReplaceValue(#"Replaced Value29",-65486,2206,Replacer.ReplaceValue,{"Receiving"}),
+    #"Replaced Value31" = Table.ReplaceValue(#"Replaced Value30",null,"",Replacer.ReplaceValue,{"A"}),
+
+
+
+    #"Renamed A" = Table.RenameColumns(#"Replaced Value31", {{"A", "Raw"}}),
+
+    #"Add Index" = Table.AddIndexColumn(#"Renamed A", "RowIndex", 0, 1, Int64.Type),
+
+    #"Add ShipName" = Table.AddColumn(#"Add Index", "ShipName", each 
+        if Text.Contains(Text.Upper([Raw]), "MV") then 
+            let
+                clean = Text.Select([Raw], {"A".."Z", "a".."z", ".", " "})
+            in Text.Trim(clean) 
+        else null, type text),
+
+    BufferTable = Table.Buffer(#"Add ShipName"),
+
+    #"Add Quantity" = Table.AddColumn(BufferTable, "Quantity", (row) =>
+        let
+            i = row[RowIndex],
+            lookahead = {
+                try BufferTable{i + 1}[Raw] otherwise null,
+                try BufferTable{i + 2}[Raw] otherwise null
+            },
+            candidates = List.RemoveNulls(lookahead),
+
+            qtyCandidate = List.First(
+                List.Select(candidates, each 
+                    Text.Select(_, {"0".."9", "."}) <> "" 
+                    and not Text.Contains(_, "/")
+                ), 
+                null
+            ),
+
+            cleanText = if qtyCandidate <> null then Text.Select(qtyCandidate, {"0".."9", "."}) else null,
+            qtyVal = if cleanText <> null and (try Number.FromText(cleanText) otherwise null) <> null 
+                then Number.FromText(cleanText) 
+                else null
+        in
+            if row[ShipName] <> null then qtyVal else null,
+        type nullable number),
+
+    #"Add Remark" = Table.AddColumn(#"Add Quantity", "Remark", (row) =>
+        let
+            i = row[RowIndex],
+            next1 = try BufferTable{i + 1}[Raw] otherwise null,
+            next2 = try BufferTable{i + 2}[Raw] otherwise null,
+            remarks = List.Select({next1, next2}, each _ <> null and Text.Select(_, {"0".."9"}) = ""),
+            remarkText = Text.Combine(remarks, "; ")
+        in
+            remarkText, type text),
+    #"Replaced Value32" = Table.ReplaceValue(#"Add Remark",null,"",Replacer.ReplaceValue,{"ShipName"}),
+
+    #"Cleaned ShipName" = Table.TransformColumns(#"Replaced Value32", {
+        "ShipName", each 
+            let
+                txt = if _ <> null then Text.Upper(_) else "",
+            mvStart = Text.PositionOf(txt, "MV"),
+            afterMV = if mvStart >= 0 then Text.Middle(txt, mvStart) else txt,
+
+            words = Text.Split(afterMV, " "),
+
+            blockedWords = {"FREETIME", "DAY", "PM", "AM"},
+
+            nameParts = List.Select(words, each 
+                List.NonNullCount(List.Transform(Text.ToList(_), each if _ >= "0" and _ <= "9" or _ = "/" then _ else null)) = 0
+                and not List.Contains(blockedWords, _)
+            ),
+
+            result = Text.Combine(nameParts, " ")
+        in
+            result, type text
+    }),
+
+    #"Fixed ShipName" = Table.TransformColumns(#"Cleaned ShipName", {
+        {"ShipName", each 
+            let
+                txt = Text.Upper(Text.Trim(_)),
+                result = if Text.StartsWith(txt, "MV ") then Text.Replace(txt, "MV ", "MV. ") else txt
+            in
+                result
+        , type text}
+    }),
+    #"Reordered Columns1" = Table.ReorderColumns(#"Fixed ShipName",{"Date", "ShipName", "Quantity", "Lot No.", "Receiving", "Stock", "Crushing_NM", "Crushing_DH", "Crushing_NonGMOs", "Prod_NM", "Prod_DH", "Prod_Hull", "Prod_NonGMOs", "Deliv_NM", "Deliv_DH", "Deliv_Hull", "Deliv_NonGMOs", "Stock_NM", "Stock_DH", "Stock_Hull", "Stock_NonGMOs", "Cap_WH", "Total ", "WH_Space", "Lot_No", "RowIndex", "Remark", "Raw"}),
+
+    #"Add Ship" = Table.AddColumn(#"Reordered Columns1", "Ship", each 
+        let
+            rawText = Text.Upper([Raw]),
+            mvPos = Text.PositionOf(rawText, "MV"),
+            beforeMV = if mvPos > 0 then Text.Start(rawText, mvPos) else "",
+            digits = Text.Select(beforeMV, {"0".."9"}),
+
+            thaiYear = Date.Year([Date]) + 543,
+            shortYear = Text.End(Text.From(thaiYear), 2),
+
+            shipNo = if digits <> "" then digits & "/" & shortYear else null
+        in
+            shipNo, type text),
+
+    #"Reordered Columns2" = Table.ReorderColumns(#"Add Ship",{"Date", "ShipName", "Ship", "Quantity", "Lot No.", "Receiving", "Stock", "Crushing_NM", "Crushing_DH", "Crushing_NonGMOs", "Prod_NM", "Prod_DH", "Prod_Hull", "Prod_NonGMOs", "Deliv_NM", "Deliv_DH", "Deliv_Hull", "Deliv_NonGMOs", "Stock_NM", "Stock_DH", "Stock_Hull", 
+    "Stock_NonGMOs", "Cap_WH", "Total ", "WH_Space", "Lot_No", "RowIndex", "Remark", "Raw"}),
+    #"Removed Columns5" = Table.RemoveColumns(#"Reordered Columns2",{"Remark", "RowIndex", "Lot_No"}),
+    #"Replaced Value33" = Table.ReplaceValue(#"Removed Columns5",null,"",Replacer.ReplaceValue,{"Ship"}),
+    #"Replaced Value34" = Table.ReplaceValue(#"Replaced Value33",null,"",Replacer.ReplaceValue,{"Lot No."}),
+    #"Add_RowIndex" = Table.AddIndexColumn(#"Replaced Value34", "RowID", 1, 1, Int64.Type),
+    #"Removed Columns6" = Table.RemoveColumns(Add_RowIndex,{"RowID"}),
+
+    Fix_ShipName_ByDate = Table.AddColumn(#"Removed Columns6", "ShipName_Final", each 
+        let
+            currentDate = [Date],
+            currentShip = [ShipName],
+            newShip =
+                if currentDate = #date(2024, 1, 17) then "Ship No.1/67" else
+                if currentDate = #date(2024, 1, 27) then "Ship No.2/67" else
+                if currentDate = #date(2024, 2, 11) then "Ship No.3/67" else
+                if currentDate = #date(2024, 3, 8) then "Ship No.4/67" else
+                if currentDate = #date(2024, 3, 22) then "Ship No.5/67" else
+                if currentDate = #date(2024, 4, 11) then "Ship No.6/67" else
+                if currentDate = #date(2024, 5, 10) then "Ship No.7/67" else
+                if currentDate = #date(2024, 5, 20) then "Ship No.8/67" else
+                if currentDate = #date(2024, 6, 2) then "Ship No.9/67" else
+                if currentDate = #date(2024, 6, 24) then "Ship No.10/67" else
+                if currentDate = #date(2024, 6, 18) then "Ship No.11/67" else
+                if currentDate = #date(2024, 7, 11) then "Ship No.12/67" else
+                if currentDate = #date(2024, 7, 30) then "Ship No.13/67" else
+                if currentDate = #date(2024, 8, 24) then "Ship No.14/67" else
+                if currentDate = #date(2024, 8, 15) then "Ship No.15/67" else
+                if currentDate = #date(2024, 9, 29) then "Ship No.16/67" else
+                if currentDate = #date(2024, 9, 17) then "Ship No.17/67" else
+                if currentDate = #date(2024, 10, 22) then "Ship No.18/67" else
+                if currentDate = #date(2024, 10, 30) then "Ship No.19/67" else
+                currentShip
+        in newShip, type text),
+
+    Rename_Final = Table.RenameColumns(
+        Table.RemoveColumns(Fix_ShipName_ByDate, {"ShipName"}),
+        {{"ShipName_Final", "ShipName"}}
+    ),
+    #"Reordered Columns3" = Table.ReorderColumns(Rename_Final,{"Date", "ShipName", "Ship", "Quantity", "Lot No.", "Receiving", "Stock", "Crushing_NM", "Crushing_DH", "Crushing_NonGMOs", "Prod_NM", "Prod_DH", "Prod_Hull", "Prod_NonGMOs", "Deliv_NM", "Deliv_DH", "Deliv_Hull", "Deliv_NonGMOs", "Stock_NM", "Stock_DH", "Stock_Hull", "Stock_NonGMOs", "Cap_WH", "Total ", "WH_Space", "Raw"}),
+
+    AddIndex = Table.AddIndexColumn(#"Reordered Columns3", "RowID", 0, 1, Int64.Type),
+
+    ValidLots = Table.SelectRows(AddIndex, each [#"Lot No."] <> null and Text.StartsWith(Text.Upper([#"Lot No."]), "LOT")),
+
+    LotGrouped = Table.Group(ValidLots, {"Lot No."}, {
+        {"FirstRowID", each List.Min([RowID]), type number},
+        {"DayCount", each Table.RowCount(_), type number}
+    }),
+    LotGroupedRenamed = Table.RenameColumns(LotGrouped, {{"Lot No.", "LotGroup"}}),
+
+    Join_Lot = Table.Join(AddIndex, "RowID", LotGroupedRenamed, "FirstRowID", JoinKind.LeftOuter),
+
+    Add_Day = Table.AddColumn(Join_Lot, "Day", each if [FirstRowID] = [RowID] then [DayCount] else " ", type number),
+
+    Remove_Helper = Table.RemoveColumns(Add_Day, {"RowID", "FirstRowID", "DayCount", "LotGroup"}),
+    #"Reordered Columns4" = Table.ReorderColumns(Remove_Helper,{"Date", "ShipName", "Ship", "Quantity", "Lot No.", "Day", "Receiving", "Stock", "Crushing_NM", "Crushing_DH", "Crushing_NonGMOs", "Prod_NM", "Prod_DH", "Prod_Hull", "Prod_NonGMOs", "Deliv_NM", "Deliv_DH", "Deliv_Hull", "Deliv_NonGMOs", "Stock_NM", "Stock_DH", "Stock_Hull", "Stock_NonGMOs", "Cap_WH", "Total ", "WH_Space", "Raw"}),
+    #"Sorted Rows" = Table.Sort(#"Reordered Columns4",{{"Date", Order.Ascending}}),
+
+    #"AddQty" = Table.AddColumn(#"Sorted Rows", "New_Quantity", each 
+    if [ShipName] = "Ship No.1/67" then 74457
+    else if [ShipName] = "Ship No.2/67" then 58568
+    else if [ShipName] = "Ship No.3/67" then 66907
+    else if [ShipName] = "Ship No.4/67" then 69143
+    else if [ShipName] = "Ship No.5/67" then 74949
+    else if [ShipName] = "Ship No.6/67" then 70791
+    else if [ShipName] = "Ship No.7/67" then 63152
+    else if [ShipName] = "Ship No.8/67" then 66997
+    else if [ShipName] = "Ship No.9/67" then 77025
+    else if [ShipName] = "Ship No.10/67" then 79135
+    else if [ShipName] = "Ship No.11/67" then 46256
+    else if [ShipName] = "Ship No.12/67" then 70698
+    else if [ShipName] = "Ship No.13/67" then 67674
+    else if [ShipName] = "Ship No.14/67" then 72620
+    else if [ShipName] = "Ship No.15/67" then 67415
+    else if [ShipName] = "Ship No.16/67" then 74012
+    else if [ShipName] = "Ship No.17/67" then 65659
+    else if [ShipName] = "Ship No.18/67" then 64271
+    else if [ShipName] = "Ship No.19/67" then 70069
+    else [Quantity]
+),
+    #"Removed Columns7" = Table.RemoveColumns(AddQty,{"Quantity"}),
+    #"Reordered Columns5" = Table.ReorderColumns(#"Removed Columns7",{"Date", "ShipName", "Ship", "New_Quantity", "Lot No.", "Day", "Receiving", "Stock", "Crushing_NM", "Crushing_DH", "Crushing_NonGMOs", "Prod_NM", "Prod_DH", "Prod_Hull", "Prod_NonGMOs", "Deliv_NM", "Deliv_DH", "Deliv_Hull", "Deliv_NonGMOs", "Stock_NM", "Stock_DH", "Stock_Hull", "Stock_NonGMOs", "Cap_WH", "Total ", "WH_Space", "Raw"}),
+    #"Renamed Columns7" = Table.RenameColumns(#"Reordered Columns5",{{"New_Quantity", "Quantity"}}),
+    #"Changed Type4" = Table.TransformColumnTypes(#"Renamed Columns7",{{"Quantity", Int64.Type}}),
+
+    Renamed = Table.RenameColumns(#"Changed Type4", {
+        {"ShipName", "ShipName"}, 
+        {"Ship", "Ship"}, 
+        {"Quantity", "Quantity"}, 
+        {"Lot No.", "LotNo"}
+    }),
+
+    ExtractedLotKey = Table.AddColumn(Renamed, "LotKey", each 
+        if Text.StartsWith(Text.Upper(Text.Trim([LotNo])), "LOT ") 
+        then Text.Trim(Text.AfterDelimiter([LotNo], "LOT ")) 
+        else null
+    , type text),
+    #"Replaced Value35" = Table.ReplaceValue(ExtractedLotKey,"",null,Replacer.ReplaceValue,{"ShipName"}),
+    #"Replaced Value36" = Table.ReplaceValue(#"Replaced Value35","",null,Replacer.ReplaceValue,{"Ship"}),
+    #"Replaced Value38" = Table.ReplaceValue(#"Replaced Value36","MV. XXX","MV.XXX",Replacer.ReplaceText,{"ShipName"}),
+    #"Filled Down" = Table.FillDown(#"Replaced Value38",{"Quantity", "Ship", "ShipName"}),
+
+////////////////////////
+    #"GroupByShip" = Table.Group(#"Filled Down", {"Ship"},{
+        {"LotKeyList", each List.RemoveNulls([LotKey]), type list}}
+    ),
+    #"OnlyShipWithNoLotKey" = Table.SelectRows(#"GroupByShip", each List.Count([LotKeyList])=0),
+    #"ShipWithoutKeyList" = List.Distinct(#"OnlyShipWithNoLotKey"[Ship]),
+
+    #"addCorrectedLotKey" = Table.AddColumn(#"Filled Down","CorrectedLotKey", each
+        if [LotKey] = null and List.Contains(#"ShipWithoutKeyList",[Ship])
+        then [Ship] else [LotKey], type text), 
+///////////////////////
+
+    AddLotGroupIndex = Table.Group(#"addCorrectedLotKey", {"CorrectedLotKey"}, {
+        {"AllData", each Table.AddIndexColumn(_, "LotIndex", 1, 1, Int64.Type)}
+    }),
+    
+
+    Expanded = Table.ExpandTableColumn(AddLotGroupIndex, "AllData", 
+        {"Date", "ShipName", "Ship", "Quantity", "LotNo", "LotIndex","Day", "Receiving", "Stock", "Crushing_NM", "Crushing_DH", "Crushing_NonGMOs", "Prod_NM", "Prod_DH", "Prod_Hull", "Prod_NonGMOs", "Deliv_NM", "Deliv_DH", "Deliv_Hull", "Deliv_NonGMOs", "Stock_NM", "Stock_DH", "Stock_Hull", "Stock_NonGMOs", "Cap_WH", "Total ", "WH_Space", "Raw"}
+    ),
+
+    NewShipName = Table.AddColumn(Expanded, "New_ShipName", each if [LotIndex] = 1 then [ShipName] else null),
+    NewShip = Table.AddColumn(NewShipName, "New_Ship", each if [LotIndex] = 1 then [Ship] else null),
+    NewQuantity = Table.AddColumn(NewShip, "New_Quantity", each if [LotIndex] = 1 then [Quantity] else null),
+
+    SortedFinal = Table.Sort(NewQuantity,{{"Date", Order.Ascending}}),
+    #"Reordered Columns6" = Table.ReorderColumns(SortedFinal,{"Date", "New_ShipName", "New_Quantity", "Day", "Receiving", "LotNo", "Stock", "Crushing_NM", "Crushing_DH", "Crushing_NonGMOs", "Prod_NM", "Prod_DH", "Prod_Hull", "Prod_NonGMOs", "Deliv_NM", "Deliv_DH", "Deliv_Hull", "Deliv_NonGMOs", "Stock_NM", "Stock_DH", "Stock_Hull", "Stock_NonGMOs", "Cap_WH", "Total ", "WH_Space", "Raw", "New_Ship", "ShipName", "Ship", "Quantity"}),
+    #"Removed Columns8" = Table.RemoveColumns(#"Reordered Columns6",{"LotIndex", "Quantity", "Ship", "ShipName", "New_Ship", "Raw"}),
+    #"Renamed Columns8" = Table.RenameColumns(#"Removed Columns8",{{"New_ShipName", "ShipName"}}),
+    #"Changed Type5" = Table.TransformColumnTypes(#"Renamed Columns8",{{"ShipName", type text}, {"Date", type date}}),
+    #"Renamed Columns9" = Table.RenameColumns(#"Changed Type5",{{"New_Quantity", "Quantity"}}),
+    #"Changed Type6" = Table.TransformColumnTypes(#"Renamed Columns9",{{"Quantity", Int64.Type}, {"Day", Int64.Type}, {"LotNo", type text}, {"Receiving", type number}, {"Stock", type number}, {"Crushing_NM", type number}, {"Crushing_DH", type number}, {"Crushing_NonGMOs", type number}, {"Prod_NM", type number}, {"Prod_DH", type number}, {"Prod_Hull", type number}, {"Prod_NonGMOs", type number}, {"Deliv_NM", type number}, {"Deliv_DH", type number}, {"Deliv_Hull", type number}, {"Deliv_NonGMOs", type number}, {"Stock_NM", type number}, {"Stock_DH", type number}, {"Stock_Hull", type number}, {"Stock_NonGMOs", type number}, {"Cap_WH", type number}, {"Total ", Int64.Type}, {"WH_Space", Int64.Type}}),
+
+    AddRemark = Table.AddColumn(#"Changed Type6", "Remark", each
+    let
+        d = [Date]
+    in
+        if d >= #date(2025, 3, 13) and d <= #date(2025, 3, 21) then "Plan shutdown #1"
+        else if d = #date(2025, 8, 3) then "ดับไฟทั้งโรงงาน"
+        else if d >= #date(2025, 8, 25) and d <= #date(2025, 8, 31) then "Plan shutdown #2"
+        else if d = #date(2025, 9, 28) then "ดับไฟประจำปี PM การไฟฟ้า"
+        else if d >= #date(2025, 12, 29) and d <= #date(2025, 12, 31) then "Plan shutdown #4"
+        else null,
+    type text
+),
+    #"Renamed Columns10" = Table.RenameColumns(AddRemark,{{"ShipName", "Ship Name"}, {"LotNo", "Lot No."}}),
+    #"Removed Columns9" = Table.RemoveColumns(#"Renamed Columns10",{"CorrectedLotKey"}),
+    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Columns9", {"Date", "Ship Name", "Quantity", "Day", 
+        "Receiving", "Lot No.", "Stock", "Cap_WH", "Total ", "WH_Space", "Remark"}, "Attribute", "Value"),
+
+    #"Added Index" = Table.AddIndexColumn(#"Unpivoted Columns", "Index", 1, 1, Int64.Type),
+    #"Duplicated Column" = Table.DuplicateColumn(#"Added Index", "Ship Name", "Ship Name - Copy"),
+    #"Renamed_Columns" = Table.RenameColumns(#"Duplicated Column",{{"Ship Name - Copy", "Ship_Name"}}),
+    #"Filled_Down" = Table.FillDown(#"Renamed_Columns",{"Ship_Name"}),
+    #"Replaced Value37" = Table.ReplaceValue(Filled_Down,"",null,Replacer.ReplaceValue,{"Lot No."}),
+    #"Added_CustomISStart" = Table.AddColumn(#"Replaced Value37", "IsStart", each if [#"Lot No."] <> null then [Ship_Name] else null),
+    #"Changed Type7" = Table.TransformColumnTypes(Added_CustomISStart,{{"Quantity", type number}, {"Cap_WH", Int64.Type}, {"Total ", type number}, {"WH_Space", type number}, {"Date", type date}})
+in
+    #"Changed Type7"
